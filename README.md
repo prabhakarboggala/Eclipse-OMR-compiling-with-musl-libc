@@ -130,7 +130,9 @@ Change ifdef to check for __GLIBC__ instead of __linux__ to prevent errors when 
 Issue:
 
 error:  __sighandler_t is not defined in this scope
+
 Solution:
+
 	# sed -i "s/struct sigaction {/#ifndef __sighandler_t \ntypedef void 
      (*__sighandler_t)(int);\n#endif\nstruct sigaction\n{/g" /usr/include/signal.h     
 	#sed -i "s/union {void (*sa_handler)(int)/__sighandler_t sa_handler/g" 
@@ -149,7 +151,9 @@ Solution:
 Issue:
 
 fatal error: numa.h: No such file or directory #include <numa.h>
+
 Solution:
+
 To disable the numa run the following commands from the top of the source tree. The top of the Eclipse OMR source tree is the directory that contains run_configure.mk.
 	#make -f run_configure.mk SPEC=linux_x86-64 OMRGLUE=./example/glue 
       'EXTRA_CONFIGURE_ARGS=--disable-OMR_PORT_NUMA_SUPPORT' clean all
@@ -158,17 +162,23 @@ Issue:
 
 error: unknown type name 'sigval_t' sigval_t val;
 error: request for member 'sival_ptr' in something not a structure or union
+
 Solution:
+
 Replace sigval_t with union sigval in omrintrospect.c file
 Issue:
 error: redefinition of 'struct prctl_mm_map' struct prctl_mm_map
+
 Solution:
+
 Comment the header file #include<linux/prctl.h> in omrosdump_helpers.c file.
 
 Issue:
 
 error: 'HZ' undeclared (first use in this function) #define USER_HZ HZ
+
 Solution:
+
 Add the below code in the beginning of the file where you got the error
 #define PROC_PARTITIONS PROC_FS_ROOT "partitions"
 #define PROC_DISKSTATS  PROC_FS_ROOT "diskstats"
@@ -179,7 +189,9 @@ Add the below code in the beginning of the file where you got the error
 Issue:
 
 error: implicit declaration of function 'pthread_attr_getstackaddr'
+
 Solution:
+
 Add the below code in the file omrthreadinspect.c
 #if _GLIBCXX_USE_C99
 #if _GLIBCXX_USE_C99 || defined __UCLIBC__
@@ -187,13 +199,17 @@ Add the below code in the file omrthreadinspect.c
 Issue:
 
 error: missing binary operator before token "(" #if __GLIBC_PREREQ(2,4)
+
 Solution:
+
 In alpine linux it will not support the version of the macro so remove the version number in the macro  #if __GLIBC_PREREQ
 
 Issue:
 
 error: implicit declaration of function 'gettid'
 error: unknown type name 'gettid'
+
 Solution:
+
 gettid( ) is not defined in alpine linux so undefine the gettid() 
 #if !__GLIBC_PREREQ && !defined(ALPINE) 
